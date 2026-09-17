@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information with nickname and avatar",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 64 },
+        "nickname": { "type": "string", "maxLength": 64 },
+        "avatarUrl": { "type": "string", "maxLength": 2048 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "username", "nickname"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "User timetable display preferences, hours, intervals and break periods",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "themeColor": { "type": "string", "enum": ["lavender", "sage", "peach", "sky", "mint"] },
+        "dayStartHour": { "type": "number" },
+        "dayEndHour": { "type": "number" },
+        "timeSlotInterval": { "type": "number" },
+        "breakTimes": { "type": "array" }
+      },
+      "required": ["userId", "themeColor", "dayStartHour", "dayEndHour", "timeSlotInterval"]
+    },
+    "Activity": {
+      "title": "Activity",
+      "description": "A scheduled study or daily activity item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 10 },
+        "startTime": { "type": "string", "maxLength": 5 },
+        "endTime": { "type": "string", "maxLength": 5 },
+        "title": { "type": "string", "maxLength": 100 },
+        "subject": { "type": "string", "maxLength": 50 },
+        "color": { "type": "string", "maxLength": 30 },
+        "isCompleted": { "type": "boolean" },
+        "hasCompletionCheck": { "type": "boolean" },
+        "isRepeating": { "type": "boolean" },
+        "repeatDays": { "type": "array" },
+        "repeatIntervalWeeks": { "type": "number" }
+      },
+      "required": ["id", "userId", "date", "startTime", "endTime", "title", "color", "isCompleted", "hasCompletionCheck"]
+    },
+    "StudySlot": {
+      "title": "StudySlot",
+      "description": "User defined self-study time interval for a specific day of week",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "dayOfWeek": { "type": "string", "enum": ["월", "화", "수", "목", "금", "토", "일"] },
+        "startTime": { "type": "string", "maxLength": 5 },
+        "endTime": { "type": "string", "maxLength": 5 },
+        "label": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "dayOfWeek", "startTime", "endTime"]
+    },
+    "DailyNote": {
+      "title": "DailyNote",
+      "description": "Today's note written directly by user for a specific date",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 10 },
+        "content": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["userId", "date", "content"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Root user document"
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": "UserSettings",
+      "description": "User timetable preferences and breaks"
+    },
+    "/users/{userId}/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "User scheduled activities"
+    },
+    "/users/{userId}/studySlots/{slotId}": {
+      "schema": "StudySlot",
+      "description": "User self-study designated intervals"
+    },
+    "/users/{userId}/dailyNotes/{dateId}": {
+      "schema": "DailyNote",
+      "description": "User daily personal quotes and reflections"
+    }
+  }
+}

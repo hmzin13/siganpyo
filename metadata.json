@@ -1,0 +1,7 @@
+{
+  "name": "공부 시간표",
+  "description": "파스텔톤 디자인의 반응형 공부 시간표 웹사이트. AI 일정 배치 추천, 자습 시간대 관리, 일간/주간 타임라인, 이미지 저장 및 계정별 설정을 지원합니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

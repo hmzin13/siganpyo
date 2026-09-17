@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // User Profile
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidId(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false; // Profiles cannot be deleted accidentally
+
+      // Settings subcollection
+      match /settings/{settingId} {
+        allow read, write: if isOwner(userId) && isValidId(settingId);
+      }
+
+      // Activities subcollection
+      match /activities/{activityId} {
+        allow read, write: if isOwner(userId) && isValidId(activityId);
+      }
+
+      // Study slots subcollection
+      match /studySlots/{slotId} {
+        allow read, write: if isOwner(userId) && isValidId(slotId);
+      }
+
+      // Daily notes subcollection
+      match /dailyNotes/{dateId} {
+        allow read, write: if isOwner(userId) && isValidId(dateId);
+      }
+    }
+  }
+}
